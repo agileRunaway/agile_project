@@ -1,5 +1,6 @@
 <?php
 // 允许上传的图片后缀
+header("Content-Type:text/html; charset=utf-8");
 $allowedExts = array("gif", "jpeg", "jpg", "png");
 $temp = explode(".", $_FILES["file"]["name"]);
 echo $_FILES["file"]["size"];
