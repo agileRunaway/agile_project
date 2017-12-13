@@ -5,7 +5,7 @@
 	$db_username = "root";
 	$db_password = "11064159";
 	$db = 'agile';
-	$port ="3306";
+ //	$port ="3306";
 	//連線伺服器
 	$db_link = mysqli_connect($db_host, $db_username, $db_password) or die("資料連結失敗！");
 	mysqli_set_charset($db_link, 'utf8');
