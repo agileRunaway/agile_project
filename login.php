@@ -16,11 +16,8 @@
 	  $row=mysqli_fetch_assoc($result);
 	  $msg = "Dear ".$row['name'].", You are welcome!";
 	  }*/
-	echo "hi";
 	if ($result = mysqli_query($db_link,$sql_query)) {
-		echo "h2";
 		if ($row=mysqli_fetch_array($result)) {
-			echo "h3";
 			$_SESSION['uID'] = $row['mem_id'];
 			$_SESSION['name'] = $row['name']; 
 			echo $_SESSION['uID'];
@@ -28,12 +25,10 @@
 			echo "<a href='shopping.php'>go</a>";
 			exit(0);
 		} else 	{
-			echo "h8";
 			header("Location: login.html");
 			echo "Invalid Username or Password - Please try again <br />";
 		}
 	}
-	echo "h6";
 ?>
 <!DOCTYPE html>
 <html>
