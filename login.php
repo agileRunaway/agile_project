@@ -14,6 +14,7 @@
 	  $row=mysqli_fetch_assoc($result);
 	  $msg = "Dear ".$row['name'].", You are welcome!";
 	  }*/
+	echo "hi";
 	if ($result = mysqli_query($db_link,$sql_query)) {
 		if ($row=mysqli_fetch_array($result)) {
 			$_SESSION['uID'] = $row['mem_id'];
