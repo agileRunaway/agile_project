@@ -5,6 +5,8 @@
 	$_SESSION['uID'] = "";
 	$uid = addslashes($_POST['uid']);
 	$pwd = addslashes($_POST['pwd']);
+	echo $uid;
+	echo $pwd;
 	$sql_query = "SELECT * FROM `member` WHERE `mem_id`='".$uid."' AND `password`='".$pwd."';";
     /*$result = mysqli_query($db_link,$sql_query) or die("Query Fail! ".mysqli_error($db_link));
 	$numRow = mysqli_num_rows($result);
