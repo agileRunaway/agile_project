@@ -8,7 +8,7 @@
 <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
     crossorigin="anonymous"></script>
 <script type="text/javascript">
-var state=1;
+var state=2;
 window.onload = function ()
 {
     
@@ -31,11 +31,19 @@ window.onload = function ()
 			
 			
 			$('#job_table').append(sql_res[0]);
-			if(state==1)
+			if(state==1){
 				$('#YourMember').append(sql_res[1]);
+				$('#YourStep').hide();
+				$('#Step_label').hide();
+				$('#member_a').hide();
+				$('#member_label').remove();
+			}
 			else{
 				$('#YourStep').append(sql_res[1]);
 				$('#YourMember').append(sql_res[2]);
+				$('#department_a').hide();
+				$('#dep_label').remove();
+				$("#YourMember2").remove();
 			}
 		}
 	});
@@ -76,35 +84,35 @@ function submit_st(){
 	var text_content = document.getElementById("text_content").value;
 	if(state==2){
 
-	var selectBox = document.getElementById("YourMember");
-	var selectedValue = selectBox.options[selectBox.selectedIndex].value;
-	console.log(selectedValue);
-	var selectStep = document.getElementById("YourStep");
-	var selectedStepValue = selectStep.options[selectStep.selectedIndex].value;
-	//console.log(PNames+" "+sday+" "+eday+" "+text_content+" "+selectedStepValue);
-	var memid=selectedValue.split("_");
-	var stepid=selectedStepValue.split("_");
-	$.ajax({
-		url: 'assign.php',
-		dataType: 'html',
-		data: {obj : "2", PName:PName , sday:sday , eday:eday , text_content:text_content ,  memid:memid[0] , memname:memid[1] , stepid : stepid[1]},
-		type: 'POST',
-		error: function(xhr) {
-			alert(xhr);
-				
-			},
-		success: function(response) {
-			console.log(response);
-			var sql_res=response.split("|&|");
-			if(sql_res[0]==1){
-				
-				
-				var table_append="<tr id='task_"+sql_res[1]+"'><td>"+PName+"</td><td>"+memid[1]+"</td><td>"+sday+"</td><td>"+eday+"</td><td>"+text_content+"</td><td><input type='button' onclick='deltask("+sql_res[1]+");' value='刪除'></td></tr>";
-				$('#job_table').append(table_append);
+		var selectBox = document.getElementById("YourMember");
+		var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+		console.log(selectedValue);
+		var selectStep = document.getElementById("YourStep");
+		var selectedStepValue = selectStep.options[selectStep.selectedIndex].value;
+		//console.log(PNames+" "+sday+" "+eday+" "+text_content+" "+selectedStepValue);
+		var memid=selectedValue.split("_");
+		var stepid=selectedStepValue.split("_");
+		$.ajax({
+			url: 'assign.php',
+			dataType: 'html',
+			data: {obj : "2", PName:PName , sday:sday , eday:eday , text_content:text_content ,  memid:memid[0] , memname:memid[1] , stepid : stepid[1]},
+			type: 'POST',
+			error: function(xhr) {
+				alert(xhr);
+					
+				},
+			success: function(response) {
+				console.log(response);
+				var sql_res=response.split("|&|");
+				if(sql_res[0]==1){
+					
+					
+					var table_append="<tr id='task_"+sql_res[1]+"'><td>"+PName+"</td><td>"+memid[1]+"</td><td>"+sday+"</td><td>"+eday+"</td><td>"+text_content+"</td><td><input type='button' onclick='deltask("+sql_res[1]+");' value='刪除'></td></tr>";
+					$('#job_table').append(table_append);
+				}
+					
 			}
-				
-		}
-	});
+		});
 	
 	}
 	else {
@@ -124,7 +132,7 @@ function submit_st(){
 				console.log(response);
 				var sql_res=response.split("|&|");
 				if(sql_res[0]==1){
-					var table_append="<tr id='step_"+sql_res[1]+"'><td>"+PName+"</td><td>"+depid[0]+"</td><td>"+sday+"</td><td>"+eday+"</td><td><input type='button' onclick='delstep("+sql_res[1]+");' value='刪除'></td></tr>";
+					var table_append="<tr id='step_"+sql_res[1]+"'><td>"+PName+"</td><td>"+depid[0]+"</td><td>"+sday+"</td><td>"+eday+"</td><td><input type='button' onclick='delstep("+sql_res[1]+","+depid[2]+");' value='刪除'></td></tr>";
 					$('#job_table').append(table_append);
 				}
 			}
@@ -155,18 +163,19 @@ function deltask(task_id){
 	
 }
 
-function delstep(step_id){
-	console.log(step_id);
+function delstep(step_id,owner_id){
+	console.log("ownerid: "+owner_id);
 	$.ajax({
 			url: 'assign.php',
 			dataType: 'html',
-			data: {obj : "5", step_id:step_id },
+			data: {obj : "5", step_id:step_id , owner_id:owner_id },
 			type: 'POST',
 			error: function(xhr) {
 				alert(xhr);
 					
 				},
 			success: function(response) {
+				console.log(response);
 				if(response==1){
 					$("#step_"+step_id).remove();
 					console.log('success');
@@ -199,7 +208,7 @@ label{font-weight:bold;}
 	
 	<a style="padding-left:100px; font-size:15px" href="data.php">回主畫面</a></b></h2>
   </div>
-  <label for="YourStep">STEP:</label><br/>
+  <label for="YourStep" id="Step_label">STEP:</label><br/>
   <select id="YourStep">
 			　
    </select>
@@ -208,8 +217,13 @@ label{font-weight:bold;}
 		<div class="AlignRight">
 			<div class="input-title"> 
 				<label for="PName">名稱:</label> <br/>
-				<label for="YourMember">員工指派:</label><br/>
-				<label for="YourMember">員工指派:</label><br/>
+				<div id="member_label">
+				<label for="YourMember" >員工指派:</label><br/>
+				</div>
+				<div id="dep_label">
+				<label for="YourMember" >部門指派:</label><br/>
+				<label for="YourMember" >子部門指派:</label><br/>
+				</div>
 				<label for="sday">開始日期:</label><br/>
 				<label for="eday">截止日期:</label><br/>
 				<label for="textbar">文字說明:</label><br/>
@@ -238,7 +252,8 @@ label{font-weight:bold;}
   <table id="job_table">
   <tr>
     <th>名稱</th>
-    <th>員工指派</th>
+    <th id="member_a">員工指派</th>
+	<th id="department_a">部門指派</th>
     <th>開始日期</th>
 	<th>截止日期</th>
 	<th>文字說明</th>

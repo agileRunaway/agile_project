@@ -29,7 +29,7 @@ if(isset($_POST["action"])&&($_POST["action"]=="add")){
 	//需要的session
 	$_SESSION["pID"]="1";
 	$_SESSION["dep_id"]="106";
-	$_SESSION["state"]="1";
+	$_SESSION["state"]="2";
 	$_SESSION["pro_mem_id"]="1";
 	
 	$pro_mem_id=$_SESSION["pro_mem_id"];
@@ -58,7 +58,8 @@ if(isset($_POST["action"])&&($_POST["action"]=="add")){
 				echo("<td>".$row_result1['name']."</td>");
 				echo("<td>".$row_result['s_time']."</td>");
 				echo("<td>".$row_result['e_time']."</td>");
-				echo("<td><input type='button' onclick='delstep(".$row_result['step_id'].");' value='刪除'></td>");
+				echo("<td>".$row_result['description']."</td>");
+				echo("<td><input type='button' onclick='delstep(".$row_result['step_id'].",".$row_result['owner_id'].");' value='刪除'></td>");
 				echo "</tr>";
 				
 			}
@@ -139,6 +140,8 @@ if(isset($_POST["action"])&&($_POST["action"]=="add")){
 		$memid=$_POST['memid'];
 		$memname=$_POST['memname'];
 		$stepid=$_POST['stepid'];
+		
+		
 		$sql='INSERT INTO `task` (name , s_time , e_time , status , description , step_id) VALUES ("'.$PName.'","'.$sday.'","'.$eday.'","0","'.$text_content.'","'.$stepid.'")';
 		$result = mysqli_query($db_link, $sql);
 		
@@ -159,9 +162,14 @@ if(isset($_POST["action"])&&($_POST["action"]=="add")){
 		$text_content=$_POST['text_content'];
 		$depid=$_POST['depid'];
 		$manager=$_POST['manager'];
-		$sql1='INSERT INTO `project_member` (pro_id , mem_id  , s_time , e_time , status , Permission) VALUES ("'.$pID.'" ,"'.$manager.'" , "'.$sday.'","'.$eday.'","0","2")';
-		$result1 = mysqli_query($db_link, $sql1);
-		$sql='INSERT INTO `step` (owner_id , name , dep_id , s_time , e_time , pro_id , seq) VALUES ("'.$manager.'" ,"'.$PName.'" , '.$depid.',"'.$sday.'","'.$eday.'","'.$pID.'","1")';
+		$sql0='SELECT pro_mem_id FROM project_member WHERE pro_id = "'.$pID.'" AND mem_id = "'.$manager.'"' ;
+		$result0 = mysqli_query($db_link, $sql0);
+		$num_rows = mysqli_num_rows($result0);
+		if($num_rows==0){
+			$sql1='INSERT INTO `project_member` (pro_id , mem_id  , s_time , e_time , status , Permission) VALUES ("'.$pID.'" ,"'.$manager.'" , "'.$sday.'","'.$eday.'","0","2")';
+			$result1 = mysqli_query($db_link, $sql1);
+		}
+		$sql='INSERT INTO `step` (owner_id , name , dep_id , s_time , e_time , pro_id , seq, description) VALUES ("'.$manager.'" ,"'.$PName.'" , '.$depid.',"'.$sday.'","'.$eday.'","'.$pID.'","1","'.$text_content.'")';
 		$result = mysqli_query($db_link, $sql);
 		echo($result);
 		$step_id=mysqli_insert_id($db_link);
@@ -181,6 +189,7 @@ if(isset($_POST["action"])&&($_POST["action"]=="add")){
 	//delete step
 	else if($obj==5){
 		$step_id=$_POST['step_id'];
+		$owner_id=$_POST['owner_id'];
 		$sql='SELECT * FROM task where step_id ='.$step_id.'';
 		$result = mysqli_query($db_link, $sql);
 		
@@ -193,33 +202,37 @@ if(isset($_POST["action"])&&($_POST["action"]=="add")){
 		else{
 			echo('0');
 		}
-		/*
-		while($row_result=mysqli_fetch_assoc($result)){
-			echo($row_result['name']);
+		
+		$sql2='SELECT name FROM step WHERE pro_id ='.$pID.' AND owner_id = '.$owner_id.'';
+		$result2 = mysqli_query($db_link, $sql2);
+		$num_rows2 = mysqli_num_rows($result2);
+		if($num_rows2 == 0){
+			$sql3='DELETE FROM project_member WHERE pro_id ='.$pID.' AND mem_id = '.$owner_id.'';
+			$result3 = mysqli_query($db_link, $sql3);
+			
 		}
-		/*
-		$sql='DELETE FROM step WHERE step_id = '.$step_id.'';
-		$result = mysqli_query($db_link, $sql);
-		
-		$sql1='DELETE FROM task_mem WHERE task_id = '.$task_id.'';
-		$result1 = mysqli_query($db_link, $sql1);
-		echo($result1);
-		*/
-		
 	}
 	else if($obj==6){
 		$sql = 'SELECT * FROM `step` where `pro_id` ="' .$pID. '"';
 		$result = mysqli_query($db_link, $sql);
-		
-		
 		while($row_result=mysqli_fetch_assoc($result)){
 			//echo('{id:'.$row_result['step_id'].' ,name:"'.$row_result['name'].'", series: [');
 			echo($row_result['step_id']);
 			echo("|&$|");
 			echo($row_result['name']);
 			echo("*&*");
+			
+			$stime=str_replace("-",",",$row_result['s_time']);
+			$etime=str_replace("-",",",$row_result['e_time']);
+			echo("all");
+			echo("|&$|");
+			echo($stime);
+			echo("|&$|");
+			echo($etime);
+			echo("*&*");
 			$sql2 = 'SELECT * FROM `task` where `step_id` ="' .$row_result['step_id']. '"';
 			$result2 = mysqli_query($db_link, $sql2);
+			
 			while($row_result2=mysqli_fetch_assoc($result2)){
 				$stime=str_replace("-",",",$row_result2['s_time']);
 				$etime=str_replace("-",",",$row_result2['e_time']);
