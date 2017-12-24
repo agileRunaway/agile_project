@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+
+    <title>Register Page  - Taoyuan_Hot.com</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <style type="text/css">
+body, html{
+     height: 100%;
+ 	background-repeat: no-repeat;
+ 	background-color: #d3d3d3;
+ 	font-family: 'Oxygen', sans-serif;
+}
+
+.main{
+ 	margin-top: 70px;
+}
+
+h1.title { 
+	font-size: 50px;
+	font-family: 'Passion One', cursive; 
+	font-weight: 400; 
+}
+
+hr{
+	width: 10%;
+	color: #fff;
+}
+
+.form-group{
+	margin-bottom: 15px;
+}
+
+label{
+	margin-bottom: 15px;
+}
+
+input,
+input::-webkit-input-placeholder {
+    font-size: 11px;
+    padding-top: 3px;
+}
+
+.main-login{
+ 	background-color: #fff;
+    /* shadows and rounded borders */
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+
+}
+
+.main-center{
+ 	margin-top: 30px;
+ 	margin: 0 auto;
+ 	max-width: 400px;
+    padding: 40px 40px;
+
+}
+
+.login-button{
+	margin-top: 5px;
+}
+
+.login-register{
+	font-size: 11px;
+	text-align: center;
+}
+.btn{
+	position:relative;
+    right:0px;
+}
+
+    </style>
+    <script src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        window.alert = function(){};
+        var defaultCSS = document.getElementById('bootstrap-css');
+        function changeCSS(css){
+            if(css) $('head > link').filter(':first').replaceWith('<link rel="stylesheet" href="'+ css +'" type="text/css" />'); 
+            else $('head > link').filter(':first').replaceWith(defaultCSS); 
+        }
+        $( document ).ready(function() {
+          var iframe_height = parseInt($('html').height()); 
+          window.parent.postMessage( iframe_height, 'https://bootsnipp.com');
+        });
+	</script>
+</head>
+<body>
+	<!DOCTYPE html>
+<html lang="en">
+    <head> 
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
+		<!-- Website CSS style -->
+		<link rel="stylesheet" type="text/css" href="assets/css/main.css">
+		<!-- Website Font style -->
+	    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<!-- Google Fonts -->
+		<link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
+		<link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
+
+		<title>Admin</title>
+	</head>
+	<body>
+		<div class="container">
+			<div class="row main">
+				<div class="panel-heading">
+	               <div class="panel-title text-center">
+	               		<h1 class="title">Welcome to program management system</h1>
+	               		<hr />
+	               	</div>
+	            </div> 
+				<div class="main-login main-center">
+					<!--<form class="form-horizontal" method="post" action="register.php">	-->
+						<div class="form-group">
+							<label for="name" class="cols-sm-2 control-label">Your Name</label>
+							<div class="cols-sm-10">
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-user fa" aria-hidden="true"></i></span>
+									<input type="text" class="form-control" name="name" id="name"  placeholder="Enter your Name"/>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="name" class="cols-sm-2 control-label">Your Department </label>
+							<div class="cols-sm-10">
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-building" aria-hidden="true"></i></span>
+									<input type="text" class="form-control" name="dep" id="dep"  placeholder="Enter your departmen ID"/>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">						
+							<label for="name" class="cols-sm-2 control-label">Your role </label>
+							<div class="cols-sm-10">
+								<div class="input-group">									
+									<span class="input-group-addon"><i class="fa fa-users" aria-hidden="true"></i></span>
+									<input type="text" class="form-control" name="state" id="state"  placeholder="1-pm 2-manager 3-programmer"/>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="username" class="cols-sm-2 control-label">Your Supervisor ID</label>
+							<div class="cols-sm-10">
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-user-plus" aria-hidden="true"></i></span>
+									<input type="text" class="form-control" name="supervisor" id="supervisor"  placeholder="Supervisor ID"/>
+								</div>
+								<div>
+									<p id="searchResult"></p>
+									<button id="search">查詢主管</button>
+								</div>
+							</div>
+						</div>		
+						<div class="form-group">
+							<label for="password" class="cols-sm-2 control-label">Password</label>
+							<div class="cols-sm-10">
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+									<input type="password" class="form-control" name="password" id="password"  placeholder="Enter your Password"/>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="confirm" class="cols-sm-2 control-label">Confirm Password</label>
+							<div class="cols-sm-10">
+								<div class="input-group">
+									<span class="input-group-addon"><i class="fa fa-lock fa-lg" aria-hidden="true"></i></span>
+									<input type="password" class="form-control" name="confirm" id="confirm"  placeholder="Confirm your Password"/>
+								</div>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<p id="r"></p>
+							<button type="button" id="s" class="btn btn-primary btn-lg btn-block login-button">Register</button>
+						</div>
+						<div class="login-register">
+				            <a href="login.html">Login</a>
+				         </div>
+					<!--</form>-->
+				</div>
+			</div>
+		</div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script type="text/Javascript">
+			$(document).ready(function() {
+				$("#search").click(function() {
+					//document.write($("#supervisor").val());
+					$.ajax({
+						url: "check.php",
+						data: {
+							state: '1',
+							number : $("#supervisor").val() 
+						},
+						type:"POST",
+						dataType:'text',
+						success: function(message) {
+							$("#searchResult").html(message);
+						},
+						error: function(jqXHR) {
+							document.write("發生錯誤: " + jqXHR.status);
+						}
+					})
+				})
+				$("#s").click(function() {
+					//document.write($("#supervisor").val());
+       				 $.ajax({
+        			    type: "POST",
+        			    url: "check.php",
+       				    dataType: "text",
+       				    data: {
+						   state : '2',
+						   name : $("#name").val(),
+         			       supervisor: $("#supervisor").val(),
+         	    		   password: $("#password").val(),
+         			       confirm: $("#confirm").val(),
+							role :$("#state").val(),
+							dep :$("#dep").val()
+        			    },
+         			    success: function(data) {
+         	          		$("#r").html(data);
+							//document.getElementById)("createResult").innerHTML=data;
+							 if(data=="f")
+								window.location.href = "reg_fail.html";
+							 if(data=='s')
+								 window.location.href = "reg_success.html";
+         		   		},
+         		   		error: function(jqXHR) {
+         		   		    alert("發生錯誤: " + jqXHR.status);
+         	  			 }
+        			})
+   				 })			
+			});
+		</script>
+	</body>
+</html>
+</body>
+</html>
+
