@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>功能分派</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+    crossorigin="anonymous"></script>
+<script type="text/javascript">
+var state=2;
+window.onload = function ()
+{
+
+	//var a='<option value="陳曉照">陳曉照</option>';
+	//$('#YourStep').append(a);
+
+	$.ajax({
+		url: 'assign.php',
+		dataType: 'html',
+		data: {obj : "0"},
+		type: 'POST',
+		error: function(xhr) {
+			alert(xhr);
+
+			},
+		success: function(response) {
+
+			var sql_res=response.split("|&|");
+
+
+
+			$('#job_table').append(sql_res[0]);
+			if(state==1){
+				$('#YourMember').append(sql_res[1]);
+				$('#YourStep').hide();
+				$('#Step_label').hide();
+				$('#member_a').hide();
+				$('#member_label').remove();
+			}
+			else{
+				$('#YourStep').append(sql_res[1]);
+				$('#YourMember').append(sql_res[2]);
+				$('#department_a').hide();
+				$('#dep_label').remove();
+				$("#YourMember2").remove();
+			}
+		}
+	});
+}
+
+function change(){
+	if(state==1){
+		$("#YourMember2").empty();
+		var selectBox = document.getElementById("YourMember");
+		var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+		if(selectedValue!="請選擇"){
+			var Value=selectedValue.split("dep_");
+
+			$.ajax({
+				url: 'assign.php',
+				dataType: 'html',
+				data: {obj : "1", dep_sel : Value[1]},
+				type: 'POST',
+				error: function(xhr) {
+					alert(xhr);
+
+					},
+				success: function(response) {
+					console.log(response);
+					$('#YourMember2').append(response);
+
+				}
+			});
+		}
+	}
+}
+
+function submit_st(){
+
+	var PName = document.getElementById("PName").value;
+	var sday = document.getElementById("sday").value;
+	var eday = document.getElementById("eday").value;
+	var text_content = document.getElementById("text_content").value;
+	if(state==2){
+
+		var selectBox = document.getElementById("YourMember");
+		var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+		console.log(selectedValue);
+		var selectStep = document.getElementById("YourStep");
+		var selectedStepValue = selectStep.options[selectStep.selectedIndex].value;
+		//console.log(PNames+" "+sday+" "+eday+" "+text_content+" "+selectedStepValue);
+		var memid=selectedValue.split("_");
+		var stepid=selectedStepValue.split("_");
+		$.ajax({
+			url: 'assign.php',
+			dataType: 'html',
+			data: {obj : "2", PName:PName , sday:sday , eday:eday , text_content:text_content ,  memid:memid[0] , memname:memid[1] , stepid : stepid[1]},
+			type: 'POST',
+			error: function(xhr) {
+				alert(xhr);
+
+				},
+			success: function(response) {
+				console.log(response);
+				var sql_res=response.split("|&|");
+				if(sql_res[0]==1){
+
+
+					var table_append="<tr id='task_"+sql_res[1]+"'><td>"+PName+"</td><td>"+memid[1]+"</td><td>"+sday+"</td><td>"+eday+"</td><td>"+text_content+"</td><td><input type='button' onclick='deltask("+sql_res[1]+");' value='刪除'></td></tr>";
+					$('#job_table').append(table_append);
+				}
+
+			}
+		});
+
+	}
+	else {
+		var selectBox = document.getElementById("YourMember2");
+		var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+		var depid=selectedValue.split("_");
+		console.log(depid[2]);
+		$.ajax({
+			url: 'assign.php',
+			dataType: 'html',
+			data: {obj : "3", PName:PName , sday:sday , eday:eday , text_content:text_content ,  depid:depid[1] , manager:depid[2] },
+			type: 'POST',
+			error: function(xhr) {
+				alert(xhr);
+				},
+			success: function(response) {
+				console.log(response);
+				var sql_res=response.split("|&|");
+				if(sql_res[0]==1){
+					var table_append="<tr id='step_"+sql_res[1]+"'><td>"+PName+"</td><td>"+depid[0]+"</td><td>"+sday+"</td><td>"+eday+"</td><td><input type='button' onclick='delstep("+sql_res[1]+","+depid[2]+");' value='刪除'></td></tr>";
+					$('#job_table').append(table_append);
+				}
+			}
+		});
+
+	}
+}
+
+function deltask(task_id){
+	console.log("del"+task_id);
+	$.ajax({
+			url: 'assign.php',
+			dataType: 'html',
+			data: {obj : "4", task_id:task_id },
+			type: 'POST',
+			error: function(xhr) {
+				alert(xhr);
+
+				},
+			success: function(response) {
+				if(response==1){
+					$("#task_"+task_id).remove();
+				}
+
+
+			}
+		});
+
+}
+
+function delstep(step_id,owner_id){
+	console.log("ownerid: "+owner_id);
+	$.ajax({
+			url: 'assign.php',
+			dataType: 'html',
+			data: {obj : "5", step_id:step_id , owner_id:owner_id },
+			type: 'POST',
+			error: function(xhr) {
+				alert(xhr);
+
+				},
+			success: function(response) {
+				console.log(response);
+				if(response==1){
+					$("#step_"+step_id).remove();
+					console.log('success');
+				}
+				else{
+					alert("這個step已經存在task了哦");
+				}
+			}
+		});
+
+}
+</script>
+<style>
+* {box-sizing: border-box;}
+body {margin-left:10px;margin-top: 5%}
+.sidenav {height: 100%;width: 400px;position: fixed;z-index: 1;top: 100;
+    left: 0;background-color: #e6ffff;overflow-x: hidden;padding: 0px 20px 0px 20px;line-height: 30px;}
+.row {margin-left: 400px;}
+table th {background-color: #b3f0ff;}
+table td, th{border-bottom: 1px solid #b3f0ff;padding: 10px;text-align: left;}
+.input-title {float: left;width: 25%;margin-right: 20px;}
+.input-data {float: left;width: 25%;}
+.AlignRight {text-align: right;}
+label{font-weight:bold;}
+html,body {height:100%;}
+.navbar {
+    margin-bottom: 0;
+    background-color: #3066BE;
+    z-index: 9999;
+    border: 0;
+    font-size: 12px !important;
+    line-height: 1.42857143 !important;
+    letter-spacing: 4px;
+    border-radius: 0;
+    font-family: Montserrat, sans-serif;
+}
+.navbar-brand {
+    color: #ffffff !important;
+}
+</style>
+</head>
+<body>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="collapse navbar-collapse" id="myNavbar">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#主管主頁">Home</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+<div class="sidenav">
+  <div class="header">
+    <h3><img src="contract.png" width="40" height="40" style="vertical-align:middle;margin-right:1%"><b>任務分派-敏捷開發專案</b></h3>
+  </div>
+	<form action="" method="post" name="formAdd" id="formAdd">
+		<div class="AlignRight">
+			<div class="input-title">
+				<label for="PName">名稱:</label> <br/>
+				<div id="dep_label">
+  				<label for="YourMember" >部門指派:</label><br/>
+				</div>
+				<label for="sday">開始日期:</label><br/>
+				<label for="eday">截止日期:</label><br/>
+				<label for="textbar">文字說明:</label><br/>
+			</div>
+		</div>
+		<div class="input-data">
+			<input type="text" name="PName" id="PName"><br>
+			<select id="YourMember" onchange="change();">
+			　<option value="請選擇">請選擇</option>
+			　
+			</select>
+			<select id="YourMember2">
+
+			</select>
+			<input type="date" name="sday" id="sday"><br>
+			<input type="date" name="eday" id="eday"><br>
+		</div>
+		<div style="padding:20px">
+			<textarea name="textbar" id="text_content" cols="45" rows="4">輸入你想要寫的內容...</textarea>
+			<input name="action" type="hidden" value="add">
+			<input type="button" name="button" id="submit_but" onclick="submit_st();" value="新增">
+		</div>
+	</form>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <table id="job_table">
+      <tr>
+        <th class="col-md-2">名稱</th>
+        <th class="col-md-2" id="department_a">部門指派</th>
+        <th class="col-md-2">開始日期</th>
+        <th class="col-md-2">截止日期</th>
+        <th class="col-md-4">文字說明</th>
+      </tr>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>
