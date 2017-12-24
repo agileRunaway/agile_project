@@ -20,15 +20,16 @@
 	if ($result = mysqli_query($db_link,$sql_query)) {
 		if ($row=mysqli_fetch_array($result)) {
 			$_SESSION['uID'] = $row['mem_id'];
-			$_SESSION['name'] = $row['name']; 
+			$_SESSION['name'] = $row['name'];
+			$_SESSION['id_state']=$row['id_state'];
 			echo $_SESSION['uID'];
 			if($row['id_state']=='3'){//rd
 				header("Location: rd_main.php");
 				echo "<a href='rd.php'>go</a>";
 			}
 			else{
-				header("Location: homepage.html");
-				echo "<a href='homepage.html'>go</a>";}
+				header("Location: homePage.html");
+				echo "<a href='homePage.html'>go</a>";}
 			exit(0);
 		} else 	{
 			header("Location: login.html");
