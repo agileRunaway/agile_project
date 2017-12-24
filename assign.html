@@ -194,8 +194,8 @@ function delstep(step_id,owner_id){
 <style>
 * {box-sizing: border-box;}
 body {margin-left:10px;margin-top: 5%}
-.sidenav {height: 80%;width: 400px;position: fixed;z-index: 1;top: 100;
-    left: 0;background-color: #e6ffff;overflow-x: hidden;padding: 20px;line-height: 30px;}
+.sidenav {height: 100%;width: 400px;position: fixed;z-index: 1;top: 100;
+    left: 0;background-color: #e6ffff;overflow-x: hidden;padding:0px 20px 0px 20px;line-height: 30px;}
 .content {margin-left: 400px;}
 table th {background-color: #b3f0ff;}
 table td, th{border-bottom: 1px solid #b3f0ff;padding: 10px;text-align: left;}
@@ -230,14 +230,14 @@ html,body {height:100%;}
       </div>
     </div>
   </nav>
-<div class="header">
-  <h3><img src="contract.png" width="40" height="40" style="vertical-align:middle;margin-right:1%"><b>任務分派-敏捷開發專案</b></h3>
-  </div>
-  <label for="YourStep" id="Step_label">STEP:</label>
-  <select id="YourStep">
-	   <option value="select">select</option>
-  </select>
 <div class="sidenav">
+  <div class="header">
+    <h3><img src="contract.png" width="40" height="40" style="vertical-align:middle;margin-right:1%"><b>任務分派-敏捷開發專案</b></h3>
+    <label for="YourStep" id="Step_label">STEP:</label>
+    <select id="YourStep">
+  	   <option value="select">select</option>
+    </select>
+  </div>
 	<form action="" method="post" name="formAdd" id="formAdd">
 		<div class="AlignRight">
 			<div class="input-title">
