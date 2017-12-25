@@ -52,10 +52,10 @@
 	else if($obj==3){
 		
 		if($state==3){
-			$sql = 'SELECT * FROM `project` where `pro_owner` ="' .$uID. '" AND status = 0';
+			$sql = 'SELECT * FROM `project` where `pro_owner` ="' .$uID. '" AND status = 1';
 		}
 		else{
-			$sql = 'SELECT * FROM `project_member` INNER JOIN `project` ON project_member.pro_id = project.pro_id WHERE mem_id ="' .$uID. '" AND project.status = "0"';
+			$sql = 'SELECT * FROM `project_member` INNER JOIN `project` ON project_member.pro_id = project.pro_id WHERE mem_id ="' .$uID. '" AND project.status = "1"';
 			
 		}
 		$result = mysqli_query($db_link, $sql);
@@ -92,10 +92,10 @@
 	}
 	else if($obj==4){
 		if($state==3){
-			$sql = 'SELECT * FROM `project` where `pro_owner` ="' .$uID. '" AND status = 1';
+			$sql = 'SELECT * FROM `project` where `pro_owner` ="' .$uID. '" AND status = 0';
 		}
 		else{
-			$sql = 'SELECT * FROM `project_member` INNER JOIN `project` ON project_member.pro_id = project.pro_id WHERE mem_id ="' .$uID. '" AND project.status = 1';
+			$sql = 'SELECT * FROM `project_member` INNER JOIN `project` ON project_member.pro_id = project.pro_id WHERE mem_id ="' .$uID. '" AND project.status = 0';
 			
 		}
 		$result = mysqli_query($db_link, $sql);
