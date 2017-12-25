@@ -36,7 +36,9 @@ window.onload = function ()
 				$('#YourStep').hide();
 				$('#Step_label').hide();
 				$('#member_a').hide();
+				$('#status_show').hide();
 				$('#member_label').remove();
+				
 			}
 			else{
 				$('#YourStep').append(sql_res[1]);
@@ -187,6 +189,27 @@ function delstep(step_id,owner_id){
 		});
 	
 }
+
+function confirm(task_id){
+	$.ajax({
+		url: 'assign.php',
+		dataType: 'html',
+		data: {obj : "10", task_id:task_id },
+		type: 'POST',
+		error: function(xhr) {
+			alert(xhr);
+				
+			},
+		success: function(response) {
+		
+			if(response==1){
+				alert('確認成功');
+			}
+			
+				
+		}
+	});
+}
 </script>
 <style>
 * {box-sizing: border-box;}
@@ -259,6 +282,7 @@ label{font-weight:bold;}
     <th>開始日期</th>
 	<th>截止日期</th>
 	<th>文字說明</th>
+	<th id="status_show">狀態</th>
   </tr>
   
   </table>

@@ -77,7 +77,18 @@
 					echo("<td>".$row_result1['s_time']."</td>");
 					echo("<td>".$row_result1['e_time']."</td>");
 					echo("<td>".$row_result1['description']."</td>");
+					if($row_result1['status']==1){
+						echo("<td>未完成</td>");
+					}
+					else if($row_result1['status']==2){
+						echo("<td>已提交</td>");
+					}
+					else{
+						echo("<td>已完成</td>");
+					}
+					
 					echo("<td><input type='button' onclick='deltask(".$row_result1['task_id'].");' value='刪除'></td>");
+					echo("<td><input type='button' onclick='confirm(".$row_result1['task_id'].");' value='確認完成'></td>");
 					echo "</tr>";
 				}
 			}
@@ -229,11 +240,11 @@
 				echo("|&$|");
 				echo($etime);
 				echo("|&$|");
-				if($row_result2['status']==0){
+				if($row_result2['status']==1){
 					
 					echo("green");
 				}
-				else if($row_result2['status']==1){
+				else if($row_result2['status']==2){
 					
 					echo("yellow");
 					
@@ -279,7 +290,13 @@
 		//echo mysqli_errno($db_link) . ": " . mysqli_error($db_link) . "\n";
 	}
 	
-	
+	else if($obj==10){
+		$task_id=$_POST['task_id'];
+		$sql='UPDATE task SET status = 3 WHERE task_id = '.$task_id.'';
+		$result = mysqli_query($db_link, $sql);
+		echo($result);
+		
+	}
 	
   ?>
 
