@@ -8,8 +8,4 @@
 		header("Location: login.html");
         echo "hello22";
     }
-    else
-        echo $_SESSION['name'];
-        echo "      ";
-        echo "<a href='logout.php'>登出</a>"
 ?>

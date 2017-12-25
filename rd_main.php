@@ -53,11 +53,11 @@
     <content>
     </br>
         <select class="f" name="number" id="number">
-         <option selected value='1'>專案名稱</option>
-        <option value='2'>任務名稱</option>
-         <option value='3'>起始日期</option>
-          <option value='4'>到期日期</option>
-          <option value='5'>狀態</option>
+         <option selected value='0'>專案名稱</option>
+        <option value='1'>任務名稱</option>
+         <option value='2'>起始日期</option>
+          <option value='3'>到期日期</option>
+          <option value='6'>狀態</option>
         </select>
         <button class="b btn btn-warning" onclick="sortTable()">Sort</button>
         <div class="btn-group">
