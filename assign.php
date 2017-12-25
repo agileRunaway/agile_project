@@ -19,7 +19,7 @@
 	
 		//顯示step or task
 		//state=1 是pm
-		if($state==1){
+		if($state==3){
 			$sql2 = 'SELECT * FROM `step` where `pro_id` ="' .$pID. '"';
 			
 			$result = mysqli_query($db_link, $sql2);

@@ -1,13 +1,13 @@
 <?php
 	include("conn.php");
 	session_start();
-	$_SESSION["state"]="2";
+	
 	$uID=$_SESSION["uID"];
 	
 	$obj=(int)$_POST['obj'];
 	$state=$_SESSION["state"];
 	if($obj==1){
-		if($state==1){
+		if($state==3){
 			$sql = 'SELECT * FROM `project` where `pro_owner` ="' .$uID. '"';
 		}
 		else{
@@ -51,7 +51,7 @@
 	
 	else if($obj==3){
 		
-		if($state==1){
+		if($state==3){
 			$sql = 'SELECT * FROM `project` where `pro_owner` ="' .$uID. '" AND status = 0';
 		}
 		else{
@@ -91,7 +91,7 @@
 		}
 	}
 	else if($obj==4){
-		if($state==1){
+		if($state==3){
 			$sql = 'SELECT * FROM `project` where `pro_owner` ="' .$uID. '" AND status = 1';
 		}
 		else{

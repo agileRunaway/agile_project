@@ -28,8 +28,9 @@
 				echo "<a href='rd.php'>go</a>";
 			}
 			else{
-				header("Location: homePage.html");
-				echo "<a href='homePage.html'>go</a>";}
+				$_SESSION['state']=$row['id_state'];
+				header("Location: homepage.html");
+				echo "<a href='homepage.html'>go</a>";}
 			exit(0);
 		} else 	{
 			header("Location: login.html");

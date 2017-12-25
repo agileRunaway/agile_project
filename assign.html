@@ -31,7 +31,7 @@ window.onload = function ()
 			state=sql_res[sql_res.length-1];
 			//$("#div_pname").append(sql_res[sql_res.length-2]);
 			$('#job_table').append(sql_res[0]);
-			if(state==1){
+			if(state==3){
 				$('#YourMember').append(sql_res[1]);
 				$('#YourStep').hide();
 				$('#Step_label').hide();
@@ -50,7 +50,7 @@ window.onload = function ()
 }
 
 function change(){
-	if(state==1){
+	if(state==3){
 		$("#YourMember2").empty();
 		var selectBox = document.getElementById("YourMember");
 		var selectedValue = selectBox.options[selectBox.selectedIndex].value;
