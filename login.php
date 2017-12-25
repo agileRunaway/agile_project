@@ -23,7 +23,7 @@
 			$_SESSION['name'] = $row['name'];
 			$_SESSION['id_state']=$row['id_state'];
 			echo $_SESSION['uID'];
-			if($row['id_state']=='3'){//rd
+			if($row['id_state']=='1'){//rd
 				header("Location: rd_main.php");
 				echo "<a href='rd.php'>go</a>";
 			}
