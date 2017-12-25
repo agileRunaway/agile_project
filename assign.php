@@ -5,7 +5,7 @@
 	//$_SESSION["pID"]="1";
 	$_SESSION["dep_id"]="106";
 	//$_SESSION["state"]="1";
-	$_SESSION["uID"]="1";
+	
 	
 	$pro_mem_id=$_SESSION["uID"];
 	$pID=$_SESSION["pID"];
