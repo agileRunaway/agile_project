@@ -45,6 +45,11 @@
 			}
 			echo("|&|");
 			echo($state);
+			echo("|&|");
+			if($state==3)
+				echo('<p class="text-left">'.$_SESSION["name"].' PM</p>');
+			else
+				echo('<p class="text-left">'.$_SESSION["name"].' 經理</p>');
 		
 	}
 		
