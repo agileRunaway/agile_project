@@ -1,0 +1,197 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <title>Test</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script type="text/javascript">
+  
+	window.onload = function ()
+	{
+		all();
+	}
+
+	function gantt(pID){
+		  
+		$.ajax({
+			url: 'homepage.php',
+			dataType: 'html',
+			data: {obj : "2",pID : pID},
+			type: 'POST',
+			error: function(xhr) {
+				alert(xhr);
+						
+				},
+			success: function(response) {
+				location.href = "jquery.ganttView-master/example/index.html";
+			}
+		});
+	}
+	
+	function done(){
+		$('#show_project').empty();
+		$.ajax({
+			url: 'homepage.php',
+			dataType: 'html',
+			data: {obj : "3"},
+			type: 'POST',
+			error: function(xhr) {
+				alert(xhr);
+						
+				},
+			success: function(response) {
+				$('#show_project').append(response);
+			}
+		});
+	}
+	function doing(){
+		$('#show_project').empty();
+		$.ajax({
+			url: 'homepage.php',
+			dataType: 'html',
+			data: {obj : "4"},
+			type: 'POST',
+			error: function(xhr) {
+				alert(xhr);
+						
+				},
+			success: function(response) {
+				$('#show_project').append(response);
+			}
+		});
+	}
+	function all(){
+		
+		$('#show_project').empty();
+		$.ajax({
+			url: 'homepage.php',
+			dataType: 'html',
+			data: {obj : "1"},
+			type: 'POST',
+			error: function(xhr) {
+				alert(xhr);
+						
+				},
+			success: function(response) {
+				var sql_res=response.split("|&|");
+				
+				$('#show_project').append(sql_res[0]);
+				if(sql_res[1]!=1){
+					$('#new_pro').hide();
+				}
+			}
+		});
+	}
+	
+	function all2(){
+		
+		$('#show_project').empty();
+		$.ajax({
+			url: 'homepage.php',
+			dataType: 'html',
+			data: {obj : "1"},
+			type: 'POST',
+			error: function(xhr) {
+				alert(xhr);
+						
+				},
+			success: function(response) {
+				$('#show_project').append(response);
+			}
+		});
+	}
+	
+	function new_project(){
+	
+		var Today=new Date();
+		
+		var todays=Today.getFullYear()+"-"+(Today.getMonth()+1) +"-"+Today.getDate();
+		
+		
+		$.ajax({
+			url: 'homepage.php',
+			dataType: 'html',
+			data: {obj : "5",today:todays},
+			type: 'POST',
+			error: function(xhr) {
+				alert(xhr);
+						
+				},
+			success: function(response) {
+				location.href = "jquery.ganttView-master/example/index.html";
+			}
+		});
+		
+	}
+
+</script>
+  
+  
+  
+<style>
+    /* Remove the navbar's default rounded borders and increase the bottom margin */ 
+    .navbar {
+      margin-bottom: 50px;
+      border-radius: 0;
+    }
+    
+    /* Remove the jumbotron's default bottom margin */ 
+     .jumbotron {
+      margin-bottom: 0;
+    }
+   
+   
+	
+  </style>
+</head>
+<body>
+
+<div class="jumbotron">
+  <div class="container text-center">
+    <h1>專案管理</h1>      
+  </div>
+</div>
+
+
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+  </div>
+</nav>
+
+<div class="container">
+  <div class="col-sm-6">
+  <p class="text-left">鍾大宣 PM</p>
+  </div>
+  
+  
+  
+  <div class="col-sm-6">
+	  <div class="btn-group" style="float:right;">
+		  <button type="button" id="new_pro" class="btn btn-primary text-right" onclick="new_project();">新增專案</button>
+		  
+		  <div class="btn-group">
+			<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+			選擇專案類型 <span class="caret"></span></button>
+			<ul class="dropdown-menu" role="menu" >
+			  <li><a href="#" onclick="all2();">全部</a></li>
+			  <li><a href="#" onclick="done();">已完成</a></li>
+			  <li><a href="#" onclick="doing();">未完成</a></li>
+			 
+			</ul>
+		</div>
+	</div>
+  </div>
+</div>
+<hr>
+<div id="show_project">
+
+
+</div><br><br>
+
+
+</body>
+</html>

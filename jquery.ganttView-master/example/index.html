@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="../lib/jquery-ui-1.8.4.css" />
+	<link rel="stylesheet" type="text/css" href="reset.css" />
+	<link rel="stylesheet" type="text/css" href="../jquery.ganttView.css" />
+	<style type="text/css">
+		body {
+			font-family: tahoma, verdana, helvetica;
+			font-size: 0.8em;
+			padding: 10px;
+		}
+		.check {
+			width: 20px;
+			height: 20px;
+			background: yellow;
+		}
+		.doing {
+			width: 20px;
+			height: 20px;
+			background: green;
+		}
+		.done {
+			width: 20px;
+			height: 20px;
+			background: #f0f0f0;
+		}
+	</style>
+	<title>jQuery Gantt</title>
+</head>
+<body>
+	<br/><br/>
+	<br/><br/>
+	<a href="../../assign.html">建立甘特圖</a>
+	<a href="../../homepage.html">回主畫面</a></b></h2><br/><br/>
+	<div id="pro_detail">
+	
+	
+	</div>
+	<br/>
+	<div id="pro_update">
+	<input type="text" name="PName" id="PName" placeholder="請輸入專案名字">
+	<input type="date" name="eday" id="eday">
+	<input type="text" name="PName" id="spec" placeholder="請輸入spec的連接">
+	<input type="button" name="button" id="submit_but" onclick="sub_update();" value="確定">
+	</div>
+	<br/>
+	<div id="ganttChart"></div>
+	<br/><br/>
+	<div id="eventMessage"></div>
+	<div class="check"></div>已提交
+	<div class="done"></div>已完成
+	<div class="doing"></div>未完成
+
+	<script type="text/javascript" src="../lib/jquery-1.4.2.js"></script>
+	<script type="text/javascript" src="../lib/date.js"></script>
+	<script type="text/javascript" src="../lib/jquery-ui-1.8.4.js"></script>
+	<script type="text/javascript" src="../jquery.ganttView.js"></script>
+	<script type="text/javascript" src="data.js"></script>
+	<script type="text/javascript">
+	var state;
+		$(function () {
+			 $("#pro_update").hide();
+			$.ajax({
+				url: '../../assign.php',
+				dataType: 'html',
+				data: {obj : "6"},
+				type: 'POST',
+				error: function(xhr) {
+					alert(xhr);
+					
+					},
+				success: function(response) {
+					
+					
+					var step=response.split("|&|");
+					
+					for(var i = 0; i< step.length-1;i++){
+					//	console.log("step: "+step[i]);
+						var task=step[i].split("*&*");
+						for(var j = 0; j< task.length-1;j++){
+							//console.log("task: "+task[j]);
+							if(j==0){
+								var att_split=task[j].split("|&$|");
+								if(i==0)
+									ganttData=[{id:att_split[0], name:att_split[1], series: []}];
+								
+								else{
+									gantttest={id:att_split[0], name:att_split[1], series: []};
+									ganttData.push(gantttest);
+								}
+								//ganttData.push(ganttD);
+								for(var k = 0; k< att_split.length;k++){
+									
+									//console.log("att: "+att_split[k]);
+								}
+							}
+							else{
+								var att_split=task[j].split("|&$|");
+								var gantt={name:att_split[0],start:att_split[1],end:att_split[2],color:att_split[3],task_id:att_split[4]};
+								ganttData[i].series.push(gantt);
+								for(var k = 0; k< att_split.length;k++){
+									
+									
+								}
+							}
+						}
+					}
+					
+					
+					$("#ganttChart").ganttView({ 
+						data: ganttData,
+						slideWidth: 900,
+						
+						behavior: {
+							onClick: function (data) {
+								console.log(data.task_id);
+								var task_id=data.task_id;
+								if(task_id){
+							
+									$.ajax({
+										url: '../../assign.php',
+										dataType: 'html',
+										data: {obj : "7",taskid : task_id},
+										type: 'POST',
+										error: function(xhr) {
+											alert(xhr);
+													
+											},
+										success: function(response) {
+											//去聊天室
+											location.href = "../../assign.html";
+										}
+									});
+								}
+								//location.href = "../../assign.html";
+								/*							
+								var msg = "You clicked on an event: { start: " + data.start.toString("M/d/yyyy") + ", end: " + data.end.toString("M/d/yyyy") + " }";
+								$("#eventMessage").text(msg);
+								*/
+							},
+							onResize: function (data) { 
+								var msg = "You resized an event: { start: " + data.start.toString("M/d/yyyy") + ", end: " + data.end.toString("M/d/yyyy") + " }";
+								$("#eventMessage").text(msg);
+							},
+							onDrag: function (data) { 
+								var msg = "You dragged an event: { start: " + data.start.toString("M/d/yyyy") + ", end: " + data.end.toString("M/d/yyyy") + " }";
+								$("#eventMessage").text(msg);
+							}
+						}
+						
+					});
+					var pstate=response.split("$$#$$");
+					state = pstate[1];
+					
+					
+				}
+				
+				
+			});
+			show_detail();
+			
+			
+			
+		});
+		
+		function chatroom(){
+			alert("room");
+		}
+		
+		function update_but(name,e_time,spec){
+			//console.log(name+","+e_time+","+spec);
+			document.getElementById("eday").value = e_time;
+			document.getElementById("PName").value = name ;
+			document.getElementById("spec").value = spec ;
+			$("#pro_update").show();
+			$("#pro_detail").empty();
+		}
+		
+		function show_detail(){
+			$("#pro_update").hide();
+			$.ajax({
+				url: '../../assign.php',
+				dataType: 'html',
+				data: {obj : "8"},
+				type: 'POST',
+				error: function(xhr) {
+					alert(xhr);
+							
+					},
+				success: function(response) {
+					
+							
+					$('#pro_detail').append(response);
+					if(state!=1){
+						$('#up_but').hide();
+					}
+				}
+			});
+		}
+		
+		function sub_update(){
+			var eday = document.getElementById("eday").value;
+			var PName = document.getElementById("PName").value;
+			var spec = document.getElementById("spec").value;
+			$.ajax({
+				url: '../../assign.php',
+				dataType: 'html',
+				data: {obj : "9", eday : eday , PName : PName , spec : spec},
+				type: 'POST',
+				error: function(xhr) {
+					alert(xhr);
+							
+					},
+				success: function(response) {
+					$("#pro_update").hide();
+					show_detail();
+					
+				}
+			});
+			
+		}
+	</script>
+
+</body>
+</html>

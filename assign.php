@@ -1,26 +1,27 @@
 <?php
+	session_start();
 	include("conn.php");
 	//需要的session
-	$_SESSION["pID"]="1";
+	//$_SESSION["pID"]="1";
 	$_SESSION["dep_id"]="106";
-	$_SESSION["state"]="2";
-	$_SESSION["pro_mem_id"]="1";
-
-	$pro_mem_id=$_SESSION["pro_mem_id"];
+	//$_SESSION["state"]="1";
+	$_SESSION["uID"]="1";
+	
+	$pro_mem_id=$_SESSION["uID"];
 	$pID=$_SESSION["pID"];
 	$state=$_SESSION["state"];
 	$dep_id=$_SESSION["dep_id"];
-
+	
 	$obj=(int)$_POST['obj'];
-
+	
 	//init
 	if($obj==0){
-
+	
 		//顯示step or task
 		//state=1 是pm
 		if($state==1){
 			$sql2 = 'SELECT * FROM `step` where `pro_id` ="' .$pID. '"';
-
+			
 			$result = mysqli_query($db_link, $sql2);
 
 			while($row_result=mysqli_fetch_assoc($result)){
@@ -35,16 +36,23 @@
 				echo("<td>".$row_result['description']."</td>");
 				echo("<td><input type='button' onclick='delstep(".$row_result['step_id'].",".$row_result['owner_id'].");' value='刪除'></td>");
 				echo "</tr>";
-
+				
 			}
 			//分割字元
 			echo("|&|");
-
+			
 			$sql='SELECT * FROM `department` where `man_dep` IS NULL';
 			$dep_result = mysqli_query($db_link, $sql);
 			while($row_result=mysqli_fetch_assoc($dep_result)){
 				echo('<option value=dep_"'.$row_result['dep_id'].'">'.$row_result['name'].'</option>');
 			}
+			//echo("|&|");
+			
+			
+			//echo("<p style='color:#4d79ff; padding-left:40px; font-size'><b>".$_SESSION["PName"]."</b></p>");
+			echo("|&|");
+			echo($state);
+			
 		}
 		// state=2 經理
 		else if($state==2){
@@ -78,23 +86,25 @@
 			$sql2 = 'SELECT step_id,name FROM `step` where `pro_id` ="' .$pID. '" AND owner_id ="' .$pro_mem_id. '"';
 			$result = mysqli_query($db_link, $sql2);
 			while($row_result=mysqli_fetch_assoc($result)){
-
+				
 				echo('<option value="step_'.$row_result['step_id'].'">'.$row_result['name'].'</option>');
 			}
 			echo("|&|");
-
+			
 			//找出這經理底下的員工
 			$sql='SELECT * FROM `member` where `dep_id` = '.$dep_id.'';
 			$mem_result = mysqli_query($db_link, $sql);
 			while($row_result=mysqli_fetch_assoc($mem_result)){
 				echo('<option value="'.$row_result['mem_id'].'_'.$row_result['name'].'">'.$row_result['name'].'</option>');
 			}
-
+			echo("|&|");
+			echo($state);
+			
 		}
 	}
 	//obj=1 find main_department
 	else if($obj==1){
-
+		
 		$dep_sel=$_POST['dep_sel'];
 		echo($dep_sel);
 		$sql='SELECT * FROM `department` where `man_dep` = '.$dep_sel.'';
@@ -114,19 +124,19 @@
 		$memid=$_POST['memid'];
 		$memname=$_POST['memname'];
 		$stepid=$_POST['stepid'];
-
-
+		
+		
 		$sql='INSERT INTO `task` (name , s_time , e_time , status , description , step_id) VALUES ("'.$PName.'","'.$sday.'","'.$eday.'","0","'.$text_content.'","'.$stepid.'")';
 		$result = mysqli_query($db_link, $sql);
-
+		
 		$task_id=mysqli_insert_id($db_link);
-
+		
 		$sql2='INSERT INTO `task_mem` (task_id , s_time , e_time , status , mem_id , mem_name) VALUES ("'.$task_id.'","'.$sday.'","'.$eday.'","0","'.$memid.'","'.$memname.'")';
 		$result2 = mysqli_query($db_link, $sql2);
 		echo($result2);
 		echo("|&|");
 		echo($task_id);
-
+		
 	}
 	//obj=3 insert step
 	else if($obj==3){
@@ -158,7 +168,7 @@
 		$sql1='DELETE FROM task_mem WHERE task_id = '.$task_id.'';
 		$result1 = mysqli_query($db_link, $sql1);
 		echo($result1);
-
+		
 	}
 	//delete step
 	else if($obj==5){
@@ -166,7 +176,7 @@
 		$owner_id=$_POST['owner_id'];
 		$sql='SELECT * FROM task where step_id ='.$step_id.'';
 		$result = mysqli_query($db_link, $sql);
-
+		
 		$num_rows = mysqli_num_rows($result);
 		if($num_rows==0){
 			$sql1='DELETE FROM step WHERE step_id = '.$step_id.'';
@@ -176,16 +186,17 @@
 		else{
 			echo('0');
 		}
-
+		
 		$sql2='SELECT name FROM step WHERE pro_id ='.$pID.' AND owner_id = '.$owner_id.'';
 		$result2 = mysqli_query($db_link, $sql2);
 		$num_rows2 = mysqli_num_rows($result2);
 		if($num_rows2 == 0){
 			$sql3='DELETE FROM project_member WHERE pro_id ='.$pID.' AND mem_id = '.$owner_id.'';
 			$result3 = mysqli_query($db_link, $sql3);
-
+			
 		}
 	}
+	//build gantt
 	else if($obj==6){
 		$sql = 'SELECT * FROM `step` where `pro_id` ="' .$pID. '"';
 		$result = mysqli_query($db_link, $sql);
@@ -195,7 +206,7 @@
 			echo("|&$|");
 			echo($row_result['name']);
 			echo("*&*");
-
+			
 			$stime=str_replace("-",",",$row_result['s_time']);
 			$etime=str_replace("-",",",$row_result['e_time']);
 			echo("all");
@@ -204,9 +215,10 @@
 			echo("|&$|");
 			echo($etime);
 			echo("*&*");
+			
 			$sql2 = 'SELECT * FROM `task` where `step_id` ="' .$row_result['step_id']. '"';
 			$result2 = mysqli_query($db_link, $sql2);
-
+			
 			while($row_result2=mysqli_fetch_assoc($result2)){
 				$stime=str_replace("-",",",$row_result2['s_time']);
 				$etime=str_replace("-",",",$row_result2['e_time']);
@@ -216,10 +228,58 @@
 				echo($stime);
 				echo("|&$|");
 				echo($etime);
+				echo("|&$|");
+				if($row_result2['status']==0){
+					
+					echo("green");
+				}
+				else if($row_result2['status']==1){
+					
+					echo("yellow");
+					
+				}
+				else{
+					echo("#f0f0f0");
+				}
+				echo("|&$|");
+				echo($row_result2['task_id']);
 				echo("*&*");
+				
 			}
 			echo("|&|");
 		}
-
+		echo('$$#$$');
+		echo($state);
+		
 	}
+	
+	else if($obj==7){
+		$tID=$_POST['taskid'];
+		$_SESSION["tID"]=$tID;
+	}
+	else if($obj==8){
+		$sql = 'SELECT * FROM `project` where `pro_id` ="' .$pID. '" ';
+		$result = mysqli_query($db_link, $sql);
+		
+		while($row_result=mysqli_fetch_assoc($result)){
+			echo('<p>專案名稱:'.$row_result["name"].'  截至日期:'.$row_result["e_time"].'  spec:'.$row_result["spec"].'</p>');
+			echo('<input type="button" id="up_but" onclick="update_but(\''.$row_result["name"].'\',\''.$row_result["e_time"].'\',\''.$row_result["spec"].'\');" value="修改">');
+			$_SESSION["PName"]=$row_result["name"];
+			/*
+			echo('<p>截至日期:'.$row_result["e_time"].'</p>');
+			echo('<p>spec:</p><a>'.$row_result["spec"].'</a>');*/
+		}
+	}
+	else if($obj==9){
+		$PName=$_POST['PName'];
+		$eday=$_POST['eday'];
+		$spec=$_POST['spec'];
+		$sql = 'UPDATE project SET name = "'.$PName.'",e_time = "'.$eday.'",spec = "'.$spec.'" WHERE pro_id = '.$pID.'';
+		$result = mysqli_query($db_link, $sql);
+		//echo mysqli_errno($db_link) . ": " . mysqli_error($db_link) . "\n";
+	}
+	
+	
+	
   ?>
+
