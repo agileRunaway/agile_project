@@ -61,7 +61,7 @@
 		$result = mysqli_query($db_link, $sql);
 		$count=3;
 		
-		echo mysqli_errno($db_link) . ": " . mysqli_error($db_link) . "\n";
+		//echo mysqli_errno($db_link) . ": " . mysqli_error($db_link) . "\n";
 		while($row_result=mysqli_fetch_assoc($result)){
 			
 			
