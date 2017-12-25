@@ -117,10 +117,12 @@
 						
 						behavior: {
 							onClick: function (data) {
+							
 								console.log(data.task_id);
 								var task_id=data.task_id;
+								
 								if(task_id){
-							
+									location.href = "../../detail.php?id="+task_id;
 									$.ajax({
 										url: '../../assign.php',
 										dataType: 'html',
@@ -132,7 +134,8 @@
 											},
 										success: function(response) {
 											//去聊天室
-											location.href = "../../detail.php";
+											
+											location.href = "../../detail.php?id="+task_id;
 										}
 									});
 								}
