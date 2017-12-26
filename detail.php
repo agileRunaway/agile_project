@@ -80,7 +80,7 @@
     echo "</br>";
     $task_ID = htmlspecialchars($_GET['id']);
     echo "<table id='myTable' class='t'>";
-    $sql_query = "SELECT t.name as n,p.name as pn,t.status as a,tm.s_time,t.e_time,t.space FROM task t,task_mem tm,step s,project p where t.task_id=tm.task_id and tm.mem_id=".$_SESSION['uID']." and s.step_id=t.step_id and s.pro_id=p.pro_id and t.task_id=".$task_ID."";
+    $sql_query = "SELECT t.name as n,p.name as pn,t.status as a,tm.s_time,t.e_time,t.space FROM task t,task_mem tm,step s,project p where t.task_id=tm.task_id and s.step_id=t.step_id and s.pro_id=p.pro_id and t.task_id=".$task_ID."";
     $result = mysqli_query($db_link,$sql_query);
     $row=mysqli_fetch_array($result);
     echo "<tr id='a'><td>專案名稱 :</td><td>".$row['pn']."</td></tr>";
@@ -100,41 +100,56 @@
         echo "<td rowspan='3'></td>";
         echo "<td class='time'>"."留言時間 ：".$row['time']."<br/><hr style='border-color: #BDB76B'/></td></tr><tr>";
         echo "<td class='content'>".$row['content']."</td></tr>";
-        echo "<br/><br/>";
     }
+    echo "<p id='insert'></p>";
+    echo "<table class='table'>";
+    echo "<tr><td class='td'>使用者:</td>";
+    echo "<td id='name' class='user'>".$_SESSION['name']."</td></tr>";
+    echo "<input type='hidden' id='uid' value='".$_SESSION['uID']."' />";
+    echo "<tr><td><input type='hidden' id='tid' value='".$task_ID."' />";
+    echo "</td>";
+    echo "<td><textarea id='text' class='reply' type='text' style='height:80px;font-size:11pt;width:500px' name='respond_content' placeholder='請給予回饋…'></textarea></td></tr><tr>";
+    echo "<td>";
+    echo "<p align='right' id='error' style='color:#8B0000;'></p></td><td align='center'><button type='button' id='save' name='confirm'>送出</button></td></tr>";
 ?>
 <script type="text/Javascript">
-         $(document).ready(function() {
+    $(document).ready(function() {
         $("#save").click(function() {
+          //document.write($("#tid").val());
           var d=new Date();
-          var YMD=d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();
+          var YMD=addzero(d.getFullYear())+"-"+addzero((d.getMonth()+1))+"-"+addzero(d.getDate())+" "+addzero(d.getHours())+":"+addzero(d.getMinutes())+":"+addzero(d.getSeconds());
           //$("#insert").html("<hr style='border-color: #BDB76B'/>");
                     $.ajax({
                         url: "get_chat.php",
                         data: {
-                            state: '4',
                             content : $("#text").val(),
-              star : $("select[name='point']").val(),
-              date : YMD,
-              pid : $("#pid").val(),
-              uid : $("#uid").val()
+                            date : YMD,
+                            uid : $("#uid").val(),
+                            tid: $("#tid").val()
                         },
                         type:"POST",
-                        dataType:'json',
+                        dataType:'text',
                         success: function(data) {
-              if(data.msg=="1")
-                  $("#insert").html("<table class='table'><tr><td class='td'>使用者:</td><td class='user'>"+$("#name").val()+"</td></tr><tr><td rowspan='3'></td><td class='time'>評論日期 ："+YMD+"<br/><hr style='border-color: #BDB76B'/></td></tr><tr><td class='content'>"+$("#text").val()+"</td></tr><br/><br/>");
-              else if(data.msg=="2")
-                 $("#error").html("寫入資料庫錯"); 	
-              else 
-                $("#error").html(data.msg); 	
+                            alert(data);
+                            if(data=="1")
+                                $("#insert").html("<table class='table'><tr><td class='td'>使用者:</td><td class='user'>"+$("#name").val()+"</td></tr><tr><td rowspan='3'></td><td class='time'>評論日期 ："+YMD+"<br/><hr style='border-color: #BDB76B'/></td></tr><tr><td class='content'>"+$("#text").val()+"</td></tr>");
+                            else if(data=="2")
+                                $("#error").html("寫入資料庫錯"); 	
+                            else 
+                                $("#error").html(data); 	
                         },
                         error: function(jqXHR) {
                             document.write("發生錯誤: " + jqXHR.status);
                         }
                     })
                 })
-      })
+        function addzero(i) {
+            if (i < 10) {
+                i = "0" + i;
+            }
+            return i;
+        }
+    })
     </script>
 </body>
 </html>
