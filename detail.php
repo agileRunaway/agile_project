@@ -130,7 +130,6 @@
                         type:"POST",
                         dataType:'text',
                         success: function(data) {
-                            alert(data);
                             if(data=="1")
                                 $("#insert").html("<table class='table'><tr><td class='td'>使用者:</td><td class='user'>"+$("#name").val()+"</td></tr><tr><td rowspan='3'></td><td class='time'>評論日期 ："+YMD+"<br/><hr style='border-color: #BDB76B'/></td></tr><tr><td class='content'>"+$("#text").val()+"</td></tr>");
                             else if(data=="2")
